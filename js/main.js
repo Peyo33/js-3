@@ -15,7 +15,8 @@
                 end: {scaleX:0, x:'100%',  ease:Expo.easeInOut},
                 time: 0.75,
                 urlDelay: 1,
-                callBack: function(e){
+                callBack: function(e){},
+                callBackDelay: function(e){
                   window.location = $(e.currentTarget).attr('href');
                 },
             }, options );
@@ -39,17 +40,48 @@
             e.preventDefault();
             $(window).trigger('urlChange');
             clearTimeout(this.timeout)
-            this.timeout = setTimeout(function(){ settings.callBack(e); }, settings.urlDelay * 1000);
+            settings.callBack(e);
+            this.timeout = setTimeout(function(){ settings.callBackDelay(e); }, settings.urlDelay * 1000);
           }
         });
 
       });
   };
-  $('.stdBtn').doButton();
+  $('.stdBtn').doButton({
+    callBack: function(){
+      creaLivello();
+    }
+  });
 
   //1 leggiamo insieme la definizione del plugin e capiamone il funzionamento
 
   //2 focalizziamoci sul parametro callback
+function creaLivello(){
+  var $target = $('body');
+  var $livello = $('<div id="livello"></div>');
+  $livello.css({
+    position:'fixed',
+    left:0,
+    top:0,
+    zIndex:9999,
+    width:'100%',
+    height:'100%',
+    background:'red',
+    display:'none'
+  });
+  $target.append($livello);
+  TweenLite.set($('#livello'), {scaleX:0, display:'block'})
+  TweenLite.to($('#livello'), 1, {scaleX:1, ease:Expo.easeInOut});
+}
+
+
+$(document).ready(function(){
+
+  TweenLite.to($('#livello'), 1, {scaleX:0, ease:Expo.easeInOut, onComplete: function(){
+    $('#livello').remove();
+  }});
+})
+
 
   //3 riassumiamo cosa abbiamo studiato per oggi, in particolare il metodo load
   //http://api.jquery.com/load/
@@ -57,5 +89,5 @@
   //4 come possiamo usare AJAX per caricare un contenuto esterno?
 
   //5 come temporizzare un'animazione sugli eventi AJAX
-  
+
 }())
