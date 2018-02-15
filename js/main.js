@@ -50,6 +50,12 @@
   $('.stdBtn').doButton({
     callBack: function(){
       creaLivello();
+    },
+    callBackDelay: function(e){
+      var urlLink = $(e.currentTarget).attr('href');
+      $('#main').load(urlLink + ' #main', function(){
+        distruggiLivello();
+      })
     }
   });
 
@@ -74,13 +80,21 @@ function creaLivello(){
   TweenLite.to($('#livello'), 1, {scaleX:1, ease:Expo.easeInOut});
 }
 
+function distruggiLivello(){
+  TweenLite.to($('#livello'), 1, {
+    scaleX:0,
+    ease:Expo.easeInOut,
+    onComplete: function(){
+      $('#livello').remove();
+    }
+  });
+}
 
 $(document).ready(function(){
 
-  TweenLite.to($('#livello'), 1, {scaleX:0, ease:Expo.easeInOut, onComplete: function(){
-    $('#livello').remove();
-  }});
-})
+  distruggiLivello();
+
+});
 
 
   //3 riassumiamo cosa abbiamo studiato per oggi, in particolare il metodo load
